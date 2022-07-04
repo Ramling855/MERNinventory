@@ -11,7 +11,15 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+
+
+import Alert from '@mui/material/Alert';
+
+import axios from 'axios'
+import { useState } from 'react';
 
 function Copyright(props) {
   return (
@@ -33,15 +41,58 @@ function Copyright(props) {
 
 const theme = createTheme();
 
+
+
+
 export default function SignUp() {
+  const [success,setSuccess]=useState(false)
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password")
-    });
-  };
+     
+    var detail= (
+      {
+        firstName: data.get("firstName"),
+        lastName: data.get("lastName"),
+                     
+        email: data.get("email"),
+       password: data.get("password"),
+       role: data.get("role"),
+        
+      }
+     
+     ) 
+           
+ 
+    console.log(detail)      
+    axios.post("http://localhost:8080/auth/signup", detail).then(result=>{
+       
+     
+      
+       if(result.data.message=="Successfully registered"){
+
+         setSuccess("success")
+        
+       }
+
+       else{
+         setSuccess("failed")
+         
+
+       }
+
+     }).catch(err=>{
+         console.log(err)
+     })
+    
+
+ }
+                    
+   
+
+    
+   
 
   return (
     <ThemeProvider theme={theme}>
@@ -58,6 +109,15 @@ export default function SignUp() {
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
+          {
+          success=="success"? <Alert severity="success" >Successfully Registered</Alert>:""
+          
+        } 
+
+        {
+          success=="failed" ?<Alert severity="error" >Email already registered</Alert>:"" 
+        }
+          
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
@@ -110,6 +170,17 @@ export default function SignUp() {
                   autoComplete="new-password"
                 />
               </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id="role"
+                  label="role"
+                  name="role"
+                  autoComplete="role"
+                />
+              </Grid>
+              
               <Grid item xs={12}>
                 <FormControlLabel
                   control={

@@ -39,7 +39,7 @@ const AddStockEdit = (props) => {
 
   const onFinish = (values) => {
     axios
-      .put(`http://localhost:7001/edit/${id}`, values)
+      .put(`http://localhost:8080/edit/${id}`, values)
       .then((res) => {
         alert("Record Updated");
         console.log("post", res.data);

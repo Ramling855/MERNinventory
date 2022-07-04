@@ -13,6 +13,18 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+
+import Alert from '@mui/material/Alert';
+
+import AlertTitle from '@mui/material/AlertTitle';
+
+import { useState } from 'react';
+import axios from 'axios'
+
+import { useNavigate } from 'react-router-dom';
+
+ 
+
 function Copyright(props) {
   return (
     <Typography
@@ -34,18 +46,58 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
+  const[success,setSuccess]=useState("")
+  const navigate=useNavigate()
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    
+    const logindata=({
+
       email: data.get("email"),
-      password: data.get("password")
-    });
+      password: data.get("password"),
+      
+
+    })
+     
+    console.log(logindata.role)
+
+        
+
+
+    axios.post("http://localhost:8080/auth/login",logindata).then(result=>{
+         
+        console.log(result.data.token)
+
+        if(result.data.token){
+          setSuccess("success")
+          localStorage.setItem("admin",result.data.token)
+          localStorage.setItem("user",result.data.token)
+          
+
+           
+          navigate("/home")
+        }
+       else{
+        setSuccess("failed")
+         
+       }
+        
+         
+
+       }).catch(err=>{
+           console.log(err)
+       })
+     
+    
+
   };
 
   return (
     <ThemeProvider theme={theme}>
+      
       <Grid container component="main" sx={{ height: "100vh" }}>
+        
         <CssBaseline />
         <Grid
           item
@@ -64,6 +116,8 @@ export default function SignInSide() {
           }}
         />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        
+          
           <Box
             sx={{
               my: 8,
@@ -73,6 +127,9 @@ export default function SignInSide() {
               alignItems: "center"
             }}
           >
+            {
+          success=="failed" ?<Alert severity="error" >Email is not registered. Please Sinup</Alert>:""
+        }
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
@@ -105,6 +162,7 @@ export default function SignInSide() {
                 id="password"
                 autoComplete="current-password"
               />
+              
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
@@ -131,8 +189,11 @@ export default function SignInSide() {
               </Grid>
               <Copyright sx={{ mt: 5 }} />
             </Box>
+           
           </Box>
+          
         </Grid>
+        
       </Grid>
     </ThemeProvider>
   );

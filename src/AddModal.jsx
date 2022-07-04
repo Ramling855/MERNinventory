@@ -65,7 +65,7 @@ const AddModal = () => {
   const onFinish = async (values) => {
     console.log(values);
     await axios
-      .post("http://localhost:7001", values)
+      .post("http://localhost:8080", values)
       .then((res) => {
         alert("Record Saved");
         console.log("post", res.data);

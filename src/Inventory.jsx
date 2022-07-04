@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Alert from '@mui/material/Alert';
 import axios from "axios";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
@@ -40,6 +41,46 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function Inventory() {
+
+////////////////////rrrrr
+
+
+  const [state,setState]=useState("")
+
+  const headers = {
+     
+    'token':localStorage.getItem("token")
+  }  
+  
+  
+     useEffect(()=>{
+       
+    axios.get("http://localhost:8080/user/showuser", {
+      headers: headers
+    }).then(response=>{
+
+         
+         const realdata=response.data.data
+          //console.log(realdata)
+          realdata.map(ele=>{
+            setState(ele.role)
+            console.log(state)
+          })
+          //console.log(headers)
+        
+
+    }).catch(err=>{
+      console.log(err)
+    })
+
+},[])
+
+       
+       
+
+
+
+/////////////////////rrrrrr
   const [rows, setRows] = useState([]);
   const [flag, setFlag] = useState(false);
   const [key, setKey] = useState();
@@ -48,7 +89,7 @@ export default function Inventory() {
   const onDeleteHandle = async (i) => {
     console.log("Delete Handler", i);
     await axios
-      .delete(`http://localhost:7001/delete/${i}`)
+      .delete(`http://localhost:8080/delete/${i}`)
       .then((res) => {
         setFlag(true);
         alert("Record Deleted Sucesfully.");
@@ -60,7 +101,7 @@ export default function Inventory() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:7001")
+      .get("http://localhost:8080")
       .then((res) => {
         setRows(res.data);
       })
@@ -74,7 +115,7 @@ export default function Inventory() {
     setKey(e.target.value);
     console.log(key);
     axios
-      .get(`http://localhost:7001/search/${key}`)
+      .get(`http://localhost:8080/search/${key}`)
       .then((res) => {
         setRows(res.data);
         console.log(res.data);
@@ -93,7 +134,7 @@ export default function Inventory() {
       setSort(1);
     }
     await axios
-      .get(`http://localhost:7001/sort/?num=${sort}`)
+      .get(`http://localhost:8080/sort/?num=${sort}`)
       .then((res) => {
         setRows(res.data);
         console.log(res.data);
@@ -103,6 +144,8 @@ export default function Inventory() {
       });
   };
 
+
+              if(localStorage.getItem("admin")&&(state!=='admin')){
   return (
     <div>
       <Box sx={{ flexGrow: 1, marginBottom: 3, marginTop: 3, marginRight: 3 }}>
@@ -165,4 +208,12 @@ export default function Inventory() {
       </TableContainer>
     </div>
   );
+}
+
+ else {
+                return(<><Alert severity="error" >Restricted Access</Alert></>)
+
+               
+
+              }
 }

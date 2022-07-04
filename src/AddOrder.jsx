@@ -67,7 +67,7 @@ const AddOrder = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:7001")
+      .get("http://localhost:8080")
       .then((res) => {
         setRows(res.data);
       })
@@ -105,7 +105,7 @@ const AddOrder = () => {
     };
     console.log("data", data);
     await axios
-      .post("http://localhost:7001/order", data)
+      .post("http://localhost:8080/order", data)
       .then((res) => {
         alert("Record Saved");
         console.log("post", res.data);
@@ -120,7 +120,7 @@ const AddOrder = () => {
     setKey(e.target.value);
     console.log(key);
     axios
-      .get(`http://localhost:7001/search/${key}`)
+      .get(`http://localhost:8080/search/${key}`)
       .then((res) => {
         setRows(res.data);
         console.log(res.data);
@@ -139,7 +139,7 @@ const AddOrder = () => {
       setSort(1);
     }
     await axios
-      .get(`http://localhost:7001/sort/?num=${sort}`)
+      .get(`http://localhost:8080/sort/?num=${sort}`)
       .then((res) => {
         setRows(res.data);
         console.log(res.data);

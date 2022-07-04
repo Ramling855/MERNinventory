@@ -34,4 +34,15 @@ router.get("/order", orderController.getData);
 router.post("/order", orderController.create);
 //http://localhost:7001/order/ ==> post
 
+// const authrouter=express.Router()
+
+
+// const {signup,login}=require("../controllers/auth.controller")
+// const {encryptPassword}=require("../middlewares/auth.middleware")
+
+// authrouter.post("/signup",encryptPassword,signup)
+// authrouter.post("/login",login)
+// module.exports=authrouter
+
+
 module.exports = router;
